@@ -1,0 +1,301 @@
+<!------------------------------------------------------------ Header ---------------------------------------------------------------------->
+<nav class="navbar navbar-default navbar-static" id="navbar-example2"> 
+	<div class="container-fluid"> 
+		<div class="navbar-header"> 
+			<button class="collapsed navbar-toggle" type="button" data-toggle="collapse" data-target=".bs-example-js-navbar-scrollspy"> 
+				<span class="sr-only">Toggle navigation</span> 
+				<span class="icon-bar"></span> 
+				<span class="icon-bar"></span> 
+				<span class="icon-bar"></span> 
+			</button> 
+			<a href="/#!/home/create" class="navbar-brand">
+				<span class="glyphicon glyphicon-road"></span> 
+				Travel Record App
+			</a> 
+		</div> 
+		<div class="collapse navbar-collapse bs-example-js-navbar-scrollspy"> 
+			<ul class="nav navbar-nav"> 
+				<li class=""><a href="http://localhost:5000/#!/home/create">Add Travel</a></li> 
+				<li class="activeChoose"><a href="/#!/home/pasttravel">Document Travel</a></li> 
+			</ul> 
+			<ul class="nav navbar-nav navbar-right">  
+				<li id="fat-menu" class="dropdown"> 
+					<a class="dropdown-toggle " id="drop3" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+						<span class="glyphicon glyphicon-align-justify"></span> 
+						{{firstname}} {{lastname}}
+					</a> 
+					<ul class="dropdown-menu" aria-labelledby="drop3"> 
+						<li><a href="/#!/home/profile"><span class="glyphicon glyphicon-user"></span> Profile</a></li> 
+						<li role="separator" class="divider"></li> 
+						<li ng-click="signout()"><a><span class="glyphicon glyphicon-off"></span> Signout</a></li> 
+					</ul> 
+				</li> 
+			</ul> 
+		</div> 
+	</div> 
+</nav>
+<!------------------------------------------------------------  Body  ---------------------------------------------------------------------->
+<center>
+	<div class="searchTravel">
+		<!-- Choose Company -->
+		<form class="form-inline">
+			<div class="form-group">
+				<label>ต้องการที่จะเบิก</label>
+			</div>
+			<div class="form-group">
+				<select class="form-control" ng-model="company" ng-init="company='บริษัท คอมพิวเตอร์ซีสเต็มอินทริเกรชั่น จำกัด'">
+					<option value="บริษัท คอมพิวเตอร์ซีสเต็มอินทริเกรชั่น จำกัด">บริษัท คอมพิวเตอร์ซีสเต็มอินทริเกรชั่น จำกัด</option>
+					<option value="บริษัท ซีเอสไอ โปรเฟสชั่นนอล จำกัด">บริษัท ซีเอสไอ โปรเฟสชั่นนอล จำกัด</option>
+					<option value="บริษัท ซีเอสไอ เอ็ดดูเคชั่น จำกัด">บริษัท ซีเอสไอ เอ็ดดูเคชั่น จำกัด</option>
+				</select>
+			</div>
+		</form>
+		<!-- searchTravel -->
+		<form class="form-inline"  ng-submit="searchByMonthAndYear()">
+			<div class="form-group">
+				<label>ค้นหาใบเบิกค่าเดินทางของเดือน</label>
+				<select ng-model="search.month" class="form-control" id="groupMonth" ng-options="x for x in groupmonth"></select>
+			</div>
+			<div class="form-group">
+				<label >ปี</label>
+				<select ng-model="search.year" class="form-control" id="groupMonth" ng-options="x for x in groupyear"></select>
+			</div>
+			<button type="submit" class="btn btn-default searchDoc">ค้นหา</button>
+		</form>
+		<br>
+	</div>
+</center>
+
+<div class="Document">
+	<!-- Top -->
+	<div class="headerform">
+		<!-- Header For CSE -->
+		<div class="textHead row" ng-show="company=='บริษัท ซีเอสไอ เอ็ดดูเคชั่น จำกัด'">
+			<div class="col-sm-4">
+				<img class="logoDoc" src="../images/logoDocTravel/cse.png" alt="Mountain View" style="width:120px;height:70px;">
+			</div>
+			<div class="col-sm-4">
+				<center>
+					<p class="p-head">บริษัท ซีเอสไอ เอ็ดดูเคชั่น จำกัด</p>
+					<p>ใบเบิกค่าใช้จ่ายในการเดินทาง (ในประเทศ)</p>
+					<br>
+				</center>
+			</div>
+			<div class="col-sm-4">
+				<p class="p-head">&nbsp</p>
+				<p align = 'right'>&nbsp</p>
+				<p align = 'right'>วันที่ขอเบิก <u>{{responScheduled}}</u></p>
+			</div>
+		</div>
+		<!-- Header For CSI -->
+		<div class="textHead row" ng-show="company=='บริษัท คอมพิวเตอร์ซีสเต็มอินทริเกรชั่น จำกัด'">
+			<div class="col-sm-4">
+				<img class="logoDoc" src="../images/logoDocTravel/csi.jpg" alt="Mountain View" style="width:120px;height:70px;">
+			</div>
+			<div class="col-sm-4">
+				<center>
+					<p class="p-head">บริษัท คอมพิวเตอร์ซีสเต็มอินทริเกรชั่น จำกัด</p>
+					<p>ใบเบิกค่าใช้จ่ายในการเดินทาง (ในประเทศ)</p>
+					<br>
+				</center>
+			</div>
+			<div class="col-sm-4">
+				<p class="p-head">&nbsp</p>
+				<p align = 'right'>&nbsp</p>
+				<p align = 'right'>วันที่ขอเบิก <u>{{responScheduled}}</u></p>
+			</div>
+		</div>
+		<!-- Header For CSP -->
+		<div class="textHead row" ng-show="company=='บริษัท ซีเอสไอ โปรเฟสชั่นนอล จำกัด'">
+			<div class="col-sm-4">
+				<img class="logoDoc" src="../images/logoDocTravel/csp.jpg" alt="Mountain View" style="width:120px;height:70px;">
+			</div>
+			<div class="col-sm-4">
+				<center>
+					<p class="p-head">บริษัท ซีเอสไอ โปรเฟสชั่นนอล จำกัด</p>
+					<p>ใบเบิกค่าใช้จ่ายในการเดินทาง (ในประเทศ)</p>
+					<br>
+				</center>
+			</div>
+			<div class="col-sm-4">
+				<p class="p-head">&nbsp</p>
+				<p align = 'right'>&nbsp</p>
+				<p align = 'right'>วันที่ขอเบิก <u>{{responScheduled}}</u></p>
+			</div>
+		</div>
+		<!-- Body -->
+		<div class="textBody">
+			<div class="row">
+				<div class="col-sm-7">
+					<div class="row">
+						<div class="col-sm-7">
+							<p>ผู้ขอเบิก <span class="spaceName">{{firstname}} {{lastname}}</span></p>
+						</div>
+						<div class="col-sm-5">
+							<p>ตำแหน่ง <span class="spacePosition">{{position}}</span></p>
+						</div>
+					</div>
+				</div>
+				<div class="col-sm-5">
+					<div class="row">
+						<div class="col-sm-5 right">
+							<p>พาหนะในการเดินทาง </p>
+						</div>
+						<div class="col-sm-3 right">
+							<p align = 'right'>&nbsp</p>
+						</div>
+						<div class="col-sm-4">
+							<p align = 'right'>&nbsp</p>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-sm-7">
+					<p>เดินทางพร้อมด้วย <span class="spaceWithTravel">&nbsp</span></p>
+				</div>
+				<div class="col-sm-5">
+					<div class="row">
+						<div class="col-sm-5 right">
+							<p><input type="checkbox"> ขนส่งสาธารณะ</p>
+						</div>
+						<div class="col-sm-7 right">
+							<p align = 'right'><input type="checkbox"> อื่นๆ ระบุ <u>&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp</u></p>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-sm-7">
+					<p><span class="spaceWithTravelNext">&nbsp</span></p>
+				</div>
+				<div class="col-sm-5">
+					<div class="row">
+						<div class="col-sm-5 right">
+							<p><input type="checkbox"> รถยนต์บริษัท</p>
+						</div>
+						<div class="col-sm-3 right">
+							<p align = 'right'>&nbsp</p>
+						</div>
+						<div class="col-sm-4">
+							<p align = 'right'>&nbsp</p>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-sm-7">
+					<p><span class="spaceWithTravelNext">&nbsp</span></p>
+				</div>
+				<div class="col-sm-5">
+					<div class="row">
+						<p><input type="checkbox"> จักรยานยนต์ส่วนบุคคล ชดเชยอัตรา {{responForAdmin.rateMotorcycle}} บาท/กม. ทะเบียนรถ <u>{{responCodeConveyanceMor}}</u></p>
+					</div>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-sm-7">
+					<p>ใบเบิกเงินทดลองจ่ายเลขที่ <span class="spaceCodeDoc">&nbsp</span></p>
+				</div>
+				<div class="col-sm-5">
+					<div class="row">
+						<p><input type="checkbox"> รถยนต์ส่วนบุคคล ชดเชยอัตรา {{responForAdmin.rateCar}} บาท/กม. ทะเบียนรถ <u>{{responcodeConveyanceCar}}</u></p>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<!-- table -->
+		<div class="table-responsive">
+			<table class="dataTravel" style="background-color: white;">
+				<thead>
+					<tr>
+						<th width="7%" rowspan="2">วันที่<br>ออกเดินทาง</th>
+						<th colspan="2">สถานที่</th>
+						<th colspan="2">ค่าใช้จ่ายกรณีขนส่งสาธารณะ</th>
+						<th width="15%" rowspan="2">ค่าชดเชย(กรณีรถส่วนตัว)<br>ระบุระยะทางxอัตราชดเชย</th>
+						<th colspan="2">อื่นๆ</th>
+						<th width="11%" rowspan="2">เลขที่ใบเสร็จรับเงิน/<br>ใบกำกับภาษี(ถ้ามี)</th>
+						<th width="11%" rowspan="2">รวมเงินต่อเที่ยว<br>(บาท)</th>
+						<th width="11%" rowspan="2">เหตุผลในการเดินทาง</th>
+						<th rowspan="2" class="btDelete">ลบ</th>
+					</tr>
+					<tr>
+						<th width="9%" >เริ่มต้น</th>
+						<th width="9%" >ปลายทาง</th>
+						<th width="10%" >พาหนะ</th>
+						<th width="6%" >ค่าใช้จ่าย</th>
+						<th width="6%" >ระบุ</th>
+						<th width="6%" >ค่าใช้จ่าย</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr ng-repeat="x in responDataTravel">
+						<td>{{x.dateTravel}}</td>
+						<td>{{x.start}}</td>
+						<td>{{x.end}}</td>
+						<td>{{x.conveyance}}</td>
+						<td>{{x.expenses}}</td>
+						<td>{{x.resultDistanceString}}</td>
+						<td>{{x.orther}}</td>
+						<td>{{x.charges}}</td>
+						<td>{{x.bill}}</td>
+						<td>{{x.result}}</td>
+						<td>{{x.reason}}</td>
+						<td class="btDelete">
+							<button type="button" class="btn btn-danger" ng-click="buttonDelete(x.datatravelNo)">ลบ</button>
+						</td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
+		<!-- button -->
+		<div class="footerform">
+			<div class="row"><br>
+				<div class="col-sm-8">
+					<p>หมายเหตุ : </p>
+				</div>
+				<div class="col-sm-4">
+					<p >รวมขอเบิกทั้งสื้น <span align="right" class="spaceResultValue">{{responResultValue}}&nbsp&nbsp</span> บาท</p>
+				</div>
+			</div>
+			<br>
+			<div class="row">
+				<div class="col-sm-4">
+					<center>
+						<p><span class="spaceCen">&nbsp</span></p>
+						<p>ลงชื่อผู้ขอเบิก</p>
+						<p><span align="center" class="spaceCen">{{responScheduled}}</span></p>
+						<p>วัน เดือน ปี</p>
+					</center>
+				</div>
+				<div class="col-sm-4">
+					<center>
+						<p><span class="spaceCen">&nbsp</span></p>
+						<p>ลงชื่อผู้อนุมัติ</p>
+						<p><span class="spaceCen">&nbsp</span></p>
+						<p>วัน เดือน ปี</p>
+					</center>	
+				</div>
+				<div class="col-sm-4">
+					<center>
+						<p><span class="spaceCen">&nbsp</span></p>
+						<p>ลงชื่อผู้รับเงิน</p>
+						<p><span class="spaceCen">&nbsp</span></p>
+						<p>วัน เดือน ปี</p>
+					</center>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+
+
+
+
+
+
+
+
+

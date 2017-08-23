@@ -1,0 +1,68 @@
+<!------------------------------------------------------------ Header ---------------------------------------------------------------------->
+<nav class="navbar navbar-default navbar-static" id="navbar-header"> 
+		<div class="container-fluid"> 
+			<div class="navbar-header"> 
+				<button class="collapsed navbar-toggle" type="button" data-toggle="collapse" data-target=".bs-example-js-navbar-scrollspy"> 
+					<span class="sr-only">Toggle navigation</span> 
+					<span class="icon-bar"></span> 
+					<span class="icon-bar"></span> 
+					<span class="icon-bar"></span> 
+				</button> 
+				<a href="/#!/home/create" class="navbar-brand">
+					<span class="glyphicon glyphicon-road"></span> 
+					Travel Record App
+				</a> 
+			</div> 
+			<div class="collapse navbar-collapse bs-example-js-navbar-scrollspy"> 
+				<ul class="nav navbar-nav"> 
+					<li class=""><a href="http://localhost:5000/#!/home/create">Add Travel</a></li> 
+					<li class=""><a href="/#!/home/pasttravel">Document Travel</a></li> 
+				</ul> 
+				<ul class="nav navbar-nav navbar-right">  
+					<li id="fat-menu" class="dropdown"> 
+						<a class="dropdown-toggle " id="drop3" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+							<span class="glyphicon glyphicon-align-justify"></span> 
+							{{firstname}} {{lastname}}
+						</a> 
+						<ul class="dropdown-menu" aria-labelledby="drop3"> 
+							<li class="activeChoose"><a href="/#!/home/profile"><span class="glyphicon glyphicon-user"></span> Profile</a></li> 
+							<li role="separator" class="divider"></li> 
+							<li ng-click="signout()"><a href="#"><span class="glyphicon glyphicon-off"></span> Signout</a></li> 
+						</ul> 
+					</li> 
+				</ul> 
+			</div> 
+		</div> 
+</nav>
+<!------------------------------------------------------------  Body  ---------------------------------------------------------------------->
+<div class="container">
+	<form ng-submit="sentEditProfile()">
+			<h2>Profile</h2>
+			<br>
+			<label>ชื่อจริง</label>
+			<input ng-model="profileform.firstname" type="text" id="inputFirstname" class="form-control" placeholder="Firstname" required="">
+			<br>
+			<label>นามสกุล</label>
+			<input ng-model="profileform.lastname" type="text" id="inputLastname" class="form-control" placeholder="Lastname"  required="">
+			<br>
+			<label>ตำแหน่ง</label>
+			<input ng-model="profileform.position" 	type="text" id="inputPosition" class="form-control" placeholder="Position"  required="">
+			<br>
+			<center><button type="button" ng-click="editProfile()" class="btn btn-success" id="buttonEdit">แก้ไข</button></center>
+			<center><button type="submit" class="btn btn-success" id="buttonSave">บันทึก</button></center>
+			<hr>
+	</form>
+</div>
+<br>
+<!-- <input ng-model="signupform.password" 	 type="Password" id="inputPassword"  class="form-control" placeholder="Password"  required=""> -->
+
+
+
+
+
+
+
+
+
+
+

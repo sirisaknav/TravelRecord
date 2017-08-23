@@ -1,0 +1,135 @@
+div.Document{
+	margin: 20px;
+	box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.1), 0 3px 10px 0 rgba(0, 0, 0, 0.10);
+}
+div.searchTravel{
+	font-weight: bold;
+	padding-top: 30px;
+	padding-bottom: 10px;
+	font-size: 30px;
+	color: white;
+	background-color: #009963;
+	box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.1), 0 3px 10px 0 rgba(0, 0, 0, 0.10);
+}
+button.searchDoc{
+	margin-top: 19px
+}
+table.dataTravel{
+	font-size: 14px;
+	border: 1px solid black;
+}
+table.dataTravel th{
+	text-align: center;
+	padding: 3px;
+	border: 1px solid black;
+}
+table.dataTravel th[rowspan] {
+	vertical-align: middle !important;
+}
+table.dataTravel td {
+	text-align: center;
+	vertical-align: middle !important;
+	padding: 3px;
+	border: 1px solid black;
+	font-weight:normal;
+}
+div.Document{
+	background-color: white;
+	padding: 20px 20px 20px 20px;
+}
+div.right{
+	padding: 0 0 0 0;
+}
+div.headerform{
+	font-weight:bold;
+}
+div.textBody{
+	display: none;
+}
+div.footerform{
+	display: none;
+}
+@media print {
+	@import url('https://fonts.googleapis.com/css?family=Trirong:600i');
+	div.textHead{
+		font-size: 12px;
+		font-family: 'Trirong', serif;
+		font-weight:bold;
+	}
+	div.footerform{
+		display: block;
+	}
+	div.textBody{
+		display: block;
+	}
+	p.p-head{
+		font-size: 15px;
+	}
+	div.textBody{
+		font-size: 12px;
+		font-family: 'Trirong', serif;
+		font-weight:bold;
+	}
+	table.dataTravel,div.footerform{
+		font-size: 11px;
+		font-family: 'Trirong', serif;
+	}
+	table.dataTravel th.btDelete,table.dataTravel td.btDelete{
+		display: none;
+	}
+	div.searchTravel{
+		display: none;
+	}
+	div.Document{
+		background-color: white;
+		padding: 0 0 0 0;
+	}
+	span.spaceCodeDoc {
+		display:inline-block;
+		border-bottom:1px solid black;
+		width: 450px;
+		padding-bottom: 0px;
+	}
+	span.spaceName {
+		display:inline-block;
+		border-bottom:1px solid black;
+		width: 290px;
+		padding-bottom: 0px;
+	}
+	span.spacePosition {
+		display:inline-block;
+		border-bottom:1px solid black;
+		width: 172px;
+		padding-bottom: 0px;
+	}
+	span.spaceWithTravel {
+		display:inline-block;
+		border-bottom:1px solid black;
+		width: 495px;
+		padding-bottom: 0px;
+	}
+	span.spaceWithTravelNext {
+		display:inline-block;
+		border-bottom:1px solid black;
+		width: 595px;
+		padding-bottom: 0px;
+	}
+	span.spaceResultValue {
+		display:inline-block;
+		border-bottom:double 1px;
+		width: 138px;
+		padding-bottom: 0px;
+	}
+	span.spaceCen {
+		display:inline-block;
+		border-bottom:1px solid black;
+		width: 138px;
+		padding-bottom: 0px;
+	}
+	div.Document{
+		margin: 0px;
+		box-shadow: 0 0px 0px 0 rgba(0, 0, 0, 0), 0 0px 0px 0 rgba(0, 0, 0, 0);
+	}
+}
+
+

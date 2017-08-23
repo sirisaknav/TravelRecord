@@ -1,0 +1,24 @@
+@import url('https://fonts.googleapis.com/css?family=Prompt');
+body{
+	font-family: 'Prompt', sans-serif;
+}
+div.margin-bottom{
+	margin-bottom: 20px;
+}
+nav.navbar{
+	font-weight: bold;
+	background-color: white;
+	box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.1), 0 3px 10px 0 rgba(0, 0, 0, 0.10);
+}
+li.activeChoose{
+	background: #7ed258;
+	border-radius: 5px 5px 5px 5px;
+}
+.navbar li a:hover{
+	background: #E8E8E8;
+	color: #7ed258;
+}
+div.container-margin{
+	margin-top: 20px;
+	box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.1), 0 3px 10px 0 rgba(0, 0, 0, 0.10);
+}

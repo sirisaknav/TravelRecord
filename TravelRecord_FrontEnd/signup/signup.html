@@ -1,0 +1,21 @@
+<div class="centered">
+	<div class="container">
+		<form class="form-signup" ng-submit="signup()">
+			<h2 class="form-signup-heading">Sign Up</h2>
+			<br>
+			<input ng-model="signupform.username" 	 type="Username" id="inputUsername"  class="form-control" placeholder="Username"  required="" autofocus="">
+			<br>
+			<input ng-model="signupform.password" 	 type="Password" id="inputPassword"  class="form-control" placeholder="Password"  required="">
+			<br>
+			<input ng-model="signupform.firstname"	 type="text" 	   id="inputFirstname" class="form-control" placeholder="Firstname" required="">
+			<br>
+			<input ng-model="signupform.lastname"	 type="text"	   id="inputLastname"  class="form-control" placeholder="Lastname"  required="">
+			<br>
+			<input ng-model="signupform.position"  	type="text"	   id="inputPosition"  class="form-control" placeholder="Position"  required="">
+			<br>
+			<button class="btn btn-lg btn-success btn-block form-signup-submit" type="submit">Sign up</button>
+			<hr>
+			Already have an account? <a href="#!/signin">Sign in</a>
+		</form>
+	</div>
+</div>

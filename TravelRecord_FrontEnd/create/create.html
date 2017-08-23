@@ -1,0 +1,786 @@
+<!------------------------------------------------------------ Header ---------------------------------------------------------------------->
+<div class="margin-bottom">
+	<nav class="navbar navbar-default navbar-static" id="navbar-header" style="margin-bottom: 0px"> 
+		<div class="container-fluid"> 
+			<div class="navbar-header"> 
+				<button class="collapsed navbar-toggle" type="button" data-toggle="collapse" data-target=".bs-example-js-navbar-scrollspy"> 
+					<span class="sr-only">Toggle navigation</span> 
+					<span class="icon-bar"></span> 
+					<span class="icon-bar"></span> 
+					<span class="icon-bar"></span> 
+				</button> 
+				<a href="/#!/home/create" class="navbar-brand">
+					<span class="glyphicon glyphicon-road"></span> 
+					Travel Record App
+				</a>
+			</div>
+			<div class="collapse navbar-collapse bs-example-js-navbar-scrollspy"> 
+				<ul class="nav navbar-nav"> 
+					<li class="activeChoose"><a href="http://localhost:5000/#!/home/create">Add Travel</a></li> 
+					<li class=""><a href="/#!/home/pasttravel">DocumentTravel</a></li> 
+				</ul> 
+				<ul class="nav navbar-nav navbar-right">  
+					<li id="fat-menu" class="dropdown"> 
+						<a class="dropdown-toggle " id="drop3" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+							<span class="glyphicon glyphicon-align-justify"></span> 
+							{{firstname}} {{lastname}}
+						</a> 
+						<ul class="dropdown-menu" aria-labelledby="drop3"> 
+							<li><a href="/#!/home/profile"><span class="glyphicon glyphicon-user"></span> Profile</a></li> 
+							<li role="separator" class="divider"></li> 
+							<li ng-click="signout()"><a href="#"><span class="glyphicon glyphicon-off"></span> Signout</a></li> 
+						</ul> 
+					</li> 
+				</ul> 
+			</div> 
+		</div> 
+	</nav>
+</div>
+<!------------------------------------------------------------  Body  ---------------------------------------------------------------------->
+<div style="background-color: white; margin-top: 0px">
+	<form ng-submit="createDataTravel()">
+
+		<!-- header all zone -->
+		<div class="head-form">
+			<center>
+				<label>เพิ่มข้อมูลการเดินทาง</label>
+			</center>
+		</div>
+
+		<div class="container container-margin">
+
+			<!-- zone 1 -->
+			<div class="head-form-group">
+				<label>ส่วนที่ 1 ข้อมูลขั้นต้นในการเดินทาง</label>
+			</div>
+			<div class="form-group" id="travelDate">
+				<div class="input-group date container row" id="datetimepicker2">
+					<div class="col-sm-3 col-xl-12 namedata">
+						<label>วันที่เดินทาง :</label>
+					</div>
+					<div class="col-sm-2 col-xl-12">
+						<input autofocus="" ng-model="datepic" required="" id="dateTravel" type="text" class="form-control" placeholder="enter date">
+					</div>
+					<div class="col-sm-1 col-xl-12">
+						<span class="input-group-addon">
+							<span class="glyphicon glyphicon-calendar"></span>
+						</span>
+					</div>
+				</div>
+			</div>
+			<div class="form-group container row">
+				<div class="col-sm-3 col-xl-12 namedata">
+					<label>เดินทางกับใคร :</label>
+				</div>
+				<div class="col-sm-9 col-xl-12">
+					<input ng-model="travelwith" type="text" class="form-control" id="travelWith" placeholder="enter travel friend">
+				</div>
+			</div>
+			<hr>
+
+			<!-- zone 2 -->
+			<div class="head-form-group">
+				<label>ส่วนที่ 2 ข้อมูลสถานที่เดินทางและพาหนะการเดินทาง</label>
+			</div>
+			<div class="form-group container row">
+				<div class="col-sm-3 col-xl-12 namedata">
+					<label>จำนวนสถานที่ที่เดินทาง :</label>
+				</div>
+				<div class="col-sm-1 col-xl-12">
+					<select class="form-control" id="countLocation" ng-model="countLocation" ng-init="countLocation='2'">
+						<option value="2">2</option>
+						<option value="3">3</option>
+						<option value="4">4</option>
+					</select>
+				</div>
+				<div class="col-sm-2 col-xl-12 namedata">
+					<label>สถานที่</label>
+				</div>
+				<div class="col-sm-3 col-xl-12 namedata">
+					<label><input type="checkbox" ng-model="checkReturnStart" ng-true-value="'YES'" ng-false-value="'NO'"> กลับไปจุดเริ่มต้น A</label>
+				</div>
+			</div> 
+			<div class="form-group container row">
+				<div class="col-sm-3 col-xl-12 namedata">
+					<label>เพิ่มสถานที่ลงข้อมูล :</label>
+				</div>
+				<div class="col-sm-2 col-xl-12">
+					<button type="button" class="btn" data-toggle="modal" data-target=".bs-addLocation-modal-lg">เพิ่มสถานที่คลิก</button>
+				</div>
+				<div class="col-sm-6 col-xl-12 annotation">
+					<label>หมายเหตุ : หาไม่มีสถานที่ ที่ต้องการสามารถเพิ่มได้จากตรงนี้</label>
+				</div>
+			</div> 
+
+			<!-- Location A -->
+			<div class="form-group container row">
+				<div class="col-sm-3 col-xl-12 namedata">
+					<span class="glyphicon glyphicon-flag"></span>
+					<label>สถานที่เดินทาง A :</label>
+				</div>
+				<div class="col-sm-7 col-xl-12">
+					<select ng-change="calculateDistanceAB();calculateDistanceBA();" ng-init="loadLocation()" class="form-control" id="locationA" ng-model="locationA" ng-options="x.nameLocation for x in locationStore"></select>
+				</div>
+			</div>
+			<!-- travel to B -->
+			<div ng-show="countLocation==2 || countLocation==3 || countLocation==4">
+				<div class="form-group container row">
+					<div class="col-sm-1 col-xl-12 namedata">
+					</div>
+					<div class="col-sm-3 col-xl-12 namedata">
+						<span class="glyphicon glyphicon-arrow-down"></span>
+						<label>เหตุผลในการเดินทาง :</label>
+					</div>
+					<div class="col-sm-4 col-xl-12">
+						<input ng-model="reasonAB" type="text" class="form-control" id="reasonAB" placeholder="enter reason travel">
+					</div>
+				</div> 
+				<div class="form-group container row">
+					<div class="col-sm-1 col-xl-12 namedata">
+					</div>
+					<div class="col-sm-3 col-xl-12">
+						<span class="glyphicon glyphicon-arrow-down"></span>
+						<label>พาหนะในการเดินทาง :</label>
+					</div>
+					<div class="col-sm-4 col-xl-12">
+						<select class="form-control" ng-model="conveyanceAB" ng-init="conveyanceAB='enter conveyance'">
+							<option value="enter conveyance">enter conveyance</option>
+							<option value="ขนส่งสาธารณะ">ขนส่งสาธารณะ</option>
+							<option value="รถยนต์ส่วนตัว">รถยนต์ส่วนตัว</option>
+							<option value="จักรยานยนต์ส่วนตัว">จักรยานยนต์ส่วนตัว</option>
+							<option value="MRT">MRT</option>
+						</select>
+					</div>
+				</div>
+				<div ng-show="conveyanceAB=='ขนส่งสาธารณะ' || conveyanceAB=='MRT' || conveyanceAB=='enter conveyance'">
+					<div class="form-group container row">
+						<div class="col-sm-1 col-xl-12 namedata">
+						</div>
+						<div class="col-sm-3 col-xl-12">
+							<span class="glyphicon glyphicon-arrow-down"></span>
+							<label>ค่าโดยสาร :</label>
+						</div>		
+						<div class="col-sm-4 col-xl-12">
+							<input ng-model="expensesAB" type="text" class="form-control" id="expensesAB" placeholder="enter expenses">
+						</div>
+						<div class="col-sm-2 col-xl-12">
+							<label> บาท</label>
+						</div>	
+					</div>
+				</div>
+				<div ng-show="conveyanceAB=='รถยนต์ส่วนตัว' || conveyanceAB=='จักรยานยนต์ส่วนตัว'">
+					<div class="form-group container row">
+						<div class="col-sm-1 col-xl-12 namedata">
+						</div>
+						<div class="col-sm-3 col-xl-12">
+							<span class="glyphicon glyphicon-arrow-down"></span>
+							<label>ทะเบียนรถ :</label>
+						</div>		
+						<div class="col-sm-4 col-xl-12">
+							<input ng-model="codeConveyanceAB" type="text" class="form-control" id="codeConveyanceAB" placeholder="enter code conveyance">
+						</div>
+					</div>
+				</div>
+				<div class="form-group container row">
+					<div class="col-sm-1 col-xl-12 namedata">
+					</div>
+					<div class="col-sm-3 col-xl-12">
+						<span class="glyphicon glyphicon-arrow-down"></span>
+						<label>รายการอื่นๆ(ถ้ามี) :</label>
+					</div>
+					<div class="col-sm-2 col-xl-12">
+						<input ng-model="ortherAB" type="text" class="form-control" id="otherAB" placeholder="enter other">
+					</div>
+					<div class="col-sm-2 col-xl-12">
+						<label>ค่าใช้จ่าย :</label>
+					</div>
+					<div class="col-sm-2 col-xl-12">
+						<input ng-model="chargesAB" type="text" class="form-control" id="chargesAB" placeholder="enter other value">
+					</div>
+					<div class="col-sm-2 col-xl-12">
+						<label>บาท</label>
+					</div>
+				</div>
+				<div class="form-group container row">
+					<div class="col-sm-1 col-xl-12 namedata">
+					</div>
+					<div class="col-sm-3 col-xl-12">
+						<span class="glyphicon glyphicon-arrow-down"></span>
+						<label>ระยะทาง :</label>
+					</div>
+					<div class="col-sm-2 col-xl-12">
+						<input readonly type="text" ng-model="distanceAB" class="form-control" id="distanceAB" placeholder="distance">
+					</div>
+					<div class="col-sm-2 col-xl-12">
+						<label>กิโลเมตร</label>
+					</div>
+					<div class="col-sm-2 col-xl-12">
+						<button type="button" class="btn" ng-click="changeWayAB()" data-toggle="modal" data-target=".bs-changWayAB-modal-lg">เลือกเส้นทางเองคลิก</button>
+					</div>
+				</div>
+				<div class="form-group container row">
+					<div class="col-sm-1 col-xl-12 namedata">
+					</div>
+					<div class="col-sm-3 col-xl-12">
+						<span class="glyphicon glyphicon-arrow-down"></span>
+						<label>เลขที่ใบกำกับภาษี(ถ้ามี) :</label>
+					</div>
+					<div class="col-sm-4 col-xl-12">
+						<input ng-model="billAB" type="text" class="form-control" id="taxInvoiceAB" placeholder="enter tax invoice">
+					</div>
+				</div>
+			</div>
+
+
+
+
+
+			<!-- Location B -->
+			<div ng-show="countLocation==2 || countLocation==3 || countLocation==4">
+				<div class="form-group container row">
+					<div class="col-sm-3 col-xl-12 namedata">
+						<span class="glyphicon glyphicon-flag"></span>
+						<label>สถานที่เดินทาง B :</label>
+					</div>
+					<div class="col-sm-7 col-xl-12">
+						<select ng-change="calculateDistanceAB();calculateDistanceBC();calculateDistanceBA();" class="form-control" id="locationB" ng-model="locationB" ng-options="x.nameLocation for x in locationStore"></select>
+					</div>
+				</div>
+			</div>
+			<!-- travel to C -->
+			<div ng-show="countLocation==3 || countLocation==4">
+				<div class="form-group container row">
+					<div class="col-sm-1 col-xl-12 namedata">
+					</div>
+					<div class="col-sm-3 col-xl-12 namedata">
+						<span class="glyphicon glyphicon-arrow-down"></span>
+						<label>เหตุผลในการเดินทาง :</label>
+					</div>
+					<div class="col-sm-4 col-xl-12">
+						<input ng-model="reasonBC" type="text" class="form-control" id="reasonBC" placeholder="enter reason travel">
+					</div>
+				</div> 
+				<div class="form-group container row">
+					<div class="col-sm-1 col-xl-12 namedata">
+					</div>
+					<div class="col-sm-3 col-xl-12">
+						<span class="glyphicon glyphicon-arrow-down"></span>
+						<label>พาหนะในการเดินทาง :</label>
+					</div>
+
+					<div class="col-sm-4 col-xl-12">
+						<select class="form-control" ng-model="conveyanceBC" ng-init="conveyanceBC='enter conveyance'">
+							<option value="enter conveyance">enter conveyance</option>
+							<option value="ขนส่งสาธารณะ">ขนส่งสาธารณะ</option>
+							<option value="รถยนต์ส่วนตัว">รถยนต์ส่วนตัว</option>
+							<option value="จักรยานยนต์ส่วนตัว">จักรยานยนต์ส่วนตัว</option>
+							<option value="MRT">MRT</option>
+						</select>
+					</div>
+				</div>
+				<div ng-show="conveyanceBC=='ขนส่งสาธารณะ' || conveyanceBC=='MRT' || conveyanceBC=='enter conveyance'">
+					<div class="form-group container row">
+						<div class="col-sm-1 col-xl-12 namedata">
+						</div>
+						<div class="col-sm-3 col-xl-12">
+							<span class="glyphicon glyphicon-arrow-down"></span>
+							<label>ค่าโดยสาร :</label>
+						</div>		
+						<div class="col-sm-4 col-xl-12">
+							<input ng-model="expensesBC" type="text" class="form-control" id="expensesBC" placeholder="enter expenses">
+						</div>
+						<div class="col-sm-2 col-xl-12">
+							<label> บาท</label>
+						</div>	
+					</div>
+				</div>
+				<div ng-show="conveyanceBC=='รถยนต์ส่วนตัว' || conveyanceBC=='จักรยานยนต์ส่วนตัว'">
+					<div class="form-group container row">
+						<div class="col-sm-1 col-xl-12 namedata">
+						</div>
+						<div class="col-sm-3 col-xl-12">
+							<span class="glyphicon glyphicon-arrow-down"></span>
+							<label>ทะเบียนรถ :</label>
+						</div>
+						<div class="col-sm-4 col-xl-12">
+							<input ng-model="codeConveyanceBC" type="text" class="form-control" id="codeConveyanceBC" placeholder="enter code conveyance">
+						</div>
+					</div>
+				</div>
+				<div class="form-group container row">
+					<div class="col-sm-1 col-xl-12 namedata">
+					</div>
+					<div class="col-sm-3 col-xl-12">
+						<span class="glyphicon glyphicon-arrow-down"></span>
+						<label>รายการอื่นๆ(ถ้ามี) :</label>
+					</div>
+					<div class="col-sm-2 col-xl-12">
+						<input ng-model="ortherBC" type="text" class="form-control" id="otherBC" placeholder="enter other">
+					</div>
+					<div class="col-sm-2 col-xl-12">
+						<label>ค่าใช้จ่าย :</label>
+					</div>
+					<div class="col-sm-2 col-xl-12">
+						<input ng-model="chargesBC" type="text" class="form-control" id="chargesBC" placeholder="enter other value">
+					</div>
+					<div class="col-sm-2 col-xl-12">
+						<label>บาท</label>
+					</div>
+				</div>
+				<div class="form-group container row">
+					<div class="col-sm-1 col-xl-12 namedata">
+					</div>
+					<div class="col-sm-3 col-xl-12">
+						<span class="glyphicon glyphicon-arrow-down"></span>
+						<label>ระยะทาง :</label>
+					</div>
+					<div class="col-sm-2 col-xl-12">
+						<input readonly type="text" ng-model="distanceBC" class="form-control" id="distanceBC" placeholder="distance">
+					</div>
+					<div class="col-sm-2 col-xl-12">
+						<label>กิโลเมตร</label>
+					</div>
+					<div class="col-sm-2 col-xl-12">
+						<button type="button" class="btn" ng-click="changeWayBC()" data-toggle="modal" data-target=".bs-changWayBC-modal-lg">เลือกเส้นทางเองคลิก</button>
+					</div>
+				</div>
+				<div class="form-group container row">
+					<div class="col-sm-1 col-xl-12 namedata">
+					</div>
+					<div class="col-sm-3 col-xl-12">
+						<span class="glyphicon glyphicon-arrow-down"></span>
+						<label>เลขที่ใบกำกับภาษี(ถ้ามี) :</label>
+					</div>
+					<div class="col-sm-4 col-xl-12">
+						<input ng-model="billBC" type="text" class="form-control" id="taxInvoiceBC" placeholder="enter tax invoice">
+					</div>
+				</div>
+			</div>
+
+
+
+
+
+
+			<!-- Location C -->
+			<div ng-show="countLocation==3 || countLocation==4">
+				<div class="form-group container row">
+					<div class="col-sm-3 col-xl-12 namedata">
+						<span class="glyphicon glyphicon-flag"></span>
+						<label>สถานที่เดินทาง C :</label>
+					</div>
+					<div class="col-sm-7 col-xl-12">
+						<select ng-change="calculateDistanceBC();calculateDistanceCD();calculateDistanceBA();" class="form-control" id="locationC" ng-model="locationC" ng-options="x.nameLocation for x in locationStore"></select>
+					</div>
+				</div>
+			</div>
+			<!-- travel to D -->
+			<div ng-show="countLocation==4">
+				<div class="form-group container row">
+					<div class="col-sm-1 col-xl-12 namedata">
+					</div>
+					<div class="col-sm-3 col-xl-12 namedata">
+						<span class="glyphicon glyphicon-arrow-down"></span>
+						<label>เหตุผลในการเดินทาง :</label>
+					</div>
+					<div class="col-sm-4 col-xl-12">
+						<input ng-model="reasonCD" type="text" class="form-control" id="reasonCD" placeholder="enter reason travel">
+					</div>
+				</div> 
+				<div class="form-group container row">
+					<div class="col-sm-1 col-xl-12 namedata">
+					</div>
+					<div class="col-sm-3 col-xl-12">
+						<span class="glyphicon glyphicon-arrow-down"></span>
+						<label>พาหนะในการเดินทาง :</label>
+					</div>
+					<div class="col-sm-4 col-xl-12">
+						<select class="form-control" ng-model="conveyanceCD" ng-init="conveyanceCD='enter conveyance'">
+							<option value="enter conveyance">enter conveyance</option>
+							<option value="ขนส่งสาธารณะ">ขนส่งสาธารณะ</option>
+							<option value="รถยนต์ส่วนตัว">รถยนต์ส่วนตัว</option>
+							<option value="จักรยานยนต์ส่วนตัว">จักรยานยนต์ส่วนตัว</option>
+							<option value="MRT">MRT</option>
+						</select>
+					</div>
+				</div>
+				<div ng-show="conveyanceCD=='ขนส่งสาธารณะ' || conveyanceCD=='MRT' || conveyanceCD=='enter conveyance'">
+					<div class="form-group container row">
+						<div class="col-sm-1 col-xl-12 namedata">
+						</div>
+						<div class="col-sm-3 col-xl-12">
+							<span class="glyphicon glyphicon-arrow-down"></span>
+							<label>ค่าโดยสาร :</label>
+						</div>		
+						<div class="col-sm-4 col-xl-12">
+							<input ng-model="expensesCD" type="text" class="form-control" id="expensesCD" placeholder="enter xpenses">
+						</div>
+						<div class="col-sm-2 col-xl-12">
+							<label> บาท</label>
+						</div>	
+					</div>
+				</div>
+				<div ng-show="conveyanceCD=='รถยนต์ส่วนตัว' || conveyanceCD=='จักรยานยนต์ส่วนตัว'">
+					<div class="form-group container row">
+						<div class="col-sm-1 col-xl-12 namedata">
+						</div>
+						<div class="col-sm-3 col-xl-12">
+							<span class="glyphicon glyphicon-arrow-down"></span>
+							<label>ทะเบียนรถ :</label>
+						</div>
+						<div class="col-sm-4 col-xl-12">
+							<input ng-model="codeConveyanceCD" type="text" class="form-control" id="codeConveyanceCD" placeholder="enter code conveyance">
+						</div>
+					</div>
+				</div>
+				<div class="form-group container row">
+					<div class="col-sm-1 col-xl-12 namedata">
+					</div>
+					<div class="col-sm-3 col-xl-12">
+						<span class="glyphicon glyphicon-arrow-down"></span>
+						<label>รายการอื่นๆ(ถ้ามี) :</label>
+					</div>
+					<div class="col-sm-2 col-xl-12">
+						<input ng-model="ortherCD" type="text" class="form-control" id="otherCD" placeholder="enter other">
+					</div>
+					<div class="col-sm-2 col-xl-12">
+						<label>ค่าใช้จ่าย :</label>
+					</div>
+					<div class="col-sm-2 col-xl-12">
+						<input ng-model="chargesCD" type="text" class="form-control" id="chargesCD" placeholder="enter other value">
+					</div>
+					<div class="col-sm-2 col-xl-12">
+						<label>บาท</label>
+					</div>
+				</div>
+				<div class="form-group container row">
+					<div class="col-sm-1 col-xl-12 namedata">
+					</div>
+					<div class="col-sm-3 col-xl-12">
+						<span class="glyphicon glyphicon-arrow-down"></span>
+						<label>ระยะทาง :</label>
+					</div>
+					<div class="col-sm-2 col-xl-12">
+						<input readonly type="text" ng-model="distanceCD" class="form-control" id="distanceCD" placeholder="distance">
+					</div>
+					<div class="col-sm-2 col-xl-12">
+						<label>กิโลเมตร</label>
+					</div>
+					<div class="col-sm-2 col-xl-12">
+						<button type="button" class="btn" ng-click="changeWayCD()" data-toggle="modal" data-target=".bs-changWayCD-modal-lg">เลือกเส้นทางเองคลิก</button>
+					</div>
+				</div>
+				<div class="form-group container row">
+					<div class="col-sm-1 col-xl-12 namedata">
+					</div>
+					<div class="col-sm-3 col-xl-12">
+						<span class="glyphicon glyphicon-arrow-down"></span>
+						<label>เลขที่ใบกำกับภาษี(ถ้ามี) :</label>
+					</div>
+					<div class="col-sm-4 col-xl-12">
+						<input ng-model="billCD" type="text" class="form-control" id="taxInvoiceCD" placeholder="enter tax invoice">
+					</div>
+				</div>
+			</div>
+
+
+
+
+
+			<!-- Location D -->
+			<div ng-show="countLocation==4">
+				<div class="form-group container row">
+					<div class="col-sm-3 col-xl-12 namedata">
+						<span class="glyphicon glyphicon-flag"></span>
+						<label>สถานที่เดินทาง D :</label>
+					</div>
+					<div class="col-sm-7 col-xl-12">
+						<select ng-change="calculateDistanceCD();calculateDistanceBA();" class="form-control" id="locationD" ng-model="locationD" ng-options="x.nameLocation for x in locationStore"></select>
+					</div>
+				</div>
+			</div>
+			<!-- travel to D -->
+			<div ng-show="checkReturnStart=='YES'">
+				<div class="form-group container row">
+					<div class="col-sm-1 col-xl-12 namedata">
+					</div>
+					<div class="col-sm-3 col-xl-12 namedata">
+						<span class="glyphicon glyphicon-arrow-down"></span>
+						<label>เหตุผลในการเดินทาง :</label>
+					</div>
+					<div class="col-sm-4 col-xl-12">
+						<input ng-model="reasonBA" type="text" class="form-control" id="reasonBA" placeholder="enter reason travel">
+					</div>
+				</div> 
+				<div class="form-group container row">
+					<div class="col-sm-1 col-xl-12 namedata">
+					</div>
+					<div class="col-sm-3 col-xl-12">
+						<span class="glyphicon glyphicon-arrow-down"></span>
+						<label>พาหนะในการเดินทาง :</label>
+					</div>
+					<div class="col-sm-4 col-xl-12">
+						<select class="form-control" ng-model="conveyanceBA" ng-init="conveyanceBA='enter conveyance'">
+							<option value="enter conveyance">enter conveyance</option>
+							<option value="ขนส่งสาธารณะ">ขนส่งสาธารณะ</option>
+							<option value="รถยนต์ส่วนตัว">รถยนต์ส่วนตัว</option>
+							<option value="จักรยานยนต์ส่วนตัว">จักรยานยนต์ส่วนตัว</option>
+							<option value="MRT">MRT</option>
+						</select>
+					</div>
+				</div>
+				<div ng-show="conveyanceBA=='ขนส่งสาธารณะ' || conveyanceBA=='MRT' || conveyanceBA=='enter conveyance'">
+					<div class="form-group container row">
+						<div class="col-sm-1 col-xl-12 namedata">
+						</div>
+						<div class="col-sm-3 col-xl-12">
+							<span class="glyphicon glyphicon-arrow-down"></span>
+							<label>ค่าโดยสาร :</label>
+						</div>		
+						<div class="col-sm-4 col-xl-12">
+							<input ng-model="expensesBA" type="text" class="form-control" id="expensesBA" placeholder="enter expenses">
+						</div>
+						<div class="col-sm-2 col-xl-12">
+							<label> บาท</label>
+						</div>	
+					</div>
+				</div>
+				<div ng-show="conveyanceBA=='รถยนต์ส่วนตัว' || conveyanceBA=='จักรยานยนต์ส่วนตัว'">
+					<div class="form-group container row">
+						<div class="col-sm-1 col-xl-12 namedata">
+						</div>
+						<div class="col-sm-3 col-xl-12">
+							<span class="glyphicon glyphicon-arrow-down"></span>
+							<label>ทะเบียนรถ :</label>
+						</div>
+						<div class="col-sm-4 col-xl-12">
+							<input ng-model="codeConveyanceBA" type="text" class="form-control" id="codeConveyanceBA" placeholder="enter code conveyance">
+						</div>
+					</div>
+				</div>
+				<div class="form-group container row">
+					<div class="col-sm-1 col-xl-12 namedata">
+					</div>
+					<div class="col-sm-3 col-xl-12">
+						<span class="glyphicon glyphicon-arrow-down"></span>
+						<label>รายการอื่นๆ(ถ้ามี) :</label>
+					</div>
+					<div class="col-sm-2 col-xl-12">
+						<input ng-model="ortherBA" type="text" class="form-control" id="otherBA" placeholder="enter other">
+					</div>
+					<div class="col-sm-2 col-xl-12">
+						<label>ค่าใช้จ่าย :</label>
+					</div>
+					<div class="col-sm-2 col-xl-12">
+						<input ng-model="chargesBA" type="text" class="form-control" id="chargesBA" placeholder="enter other value">
+					</div>
+					<div class="col-sm-2 col-xl-12">
+						<label>บาท</label>
+					</div>
+				</div>
+				<div class="form-group container row">
+					<div class="col-sm-1 col-xl-12 namedata">
+					</div>
+					<div class="col-sm-3 col-xl-12">
+						<span class="glyphicon glyphicon-arrow-down"></span>
+						<label>ระยะทาง :</label>
+					</div>
+					<div class="col-sm-2 col-xl-12">
+						<input readonly type="text" ng-model="distanceBA" class="form-control" id="distanceBA" placeholder="distance">
+					</div>
+					<div class="col-sm-2 col-xl-12">
+						<label>กิโลเมตร</label>
+					</div>
+					<div class="col-sm-2 col-xl-12">
+						<button type="button" class="btn" ng-click="changeWayBA()" data-toggle="modal" data-target=".bs-changWayBA-modal-lg">เลือกเส้นทางเองคลิก</button>
+					</div>
+				</div>
+				<div class="form-group container row">
+					<div class="col-sm-1 col-xl-12 namedata">
+					</div>
+					<div class="col-sm-3 col-xl-12">
+						<span class="glyphicon glyphicon-arrow-down"></span>
+						<label>เลขที่ใบกำกับภาษี(ถ้ามี) :</label>
+					</div>
+					<div class="col-sm-4 col-xl-12">
+						<input ng-model="billBA" type="text" class="form-control" id="taxInvoiceBA" placeholder="enter tax invoice">
+					</div>
+				</div>
+			</div>
+
+
+			<!-- Location A -->
+			<div ng-show="checkReturnStart=='YES'">
+				<div class="form-group container row">
+					<div class="col-sm-3 col-xl-12 namedata">
+						<span class="glyphicon glyphicon-flag"></span>
+						<label>สถานที่เดินทาง A :</label>
+					</div>
+					<div class="col-sm-7 col-xl-12">
+						<select ng-change="calculateDistanceAB();calculateDistanceBA();" class="form-control" id="locationA" ng-model="locationA" ng-options="x.nameLocation for x in locationStore"></select>
+					</div>
+				</div> 
+			</div>
+
+
+
+
+			<center><button type="submit" class="btn createData" id="submit">บันทึกการเดินทางนี้</button></center>
+		</div>
+	</form>
+</div>
+<br>
+<!------------------------------------------------------------  Popup  ---------------------------------------------------------------------->
+<!-- Popup add location -->
+<div class="modal fade bs-addLocation-modal-lg" role="dialog" tabindex="-1" aria-labelledby="myLargeModalLabel" style="display: none;"> 
+	<div class="modal-dialog modal-lg" role="document"> 
+		<div class="modal-content"> 
+			<div class="modal-header"> 
+				<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+					<span aria-hidden="true">X</span>
+				</button> 
+				<h4 class="modal-title" id="myLargeModalLabel">เพิ่มสถานที่เดินทาง</h4> 
+			</div> 
+			<div class="modal-body">
+				<form ng-submit="saveLocation()">
+					<div class="row">
+						<div class="col-sm-2 col-xl-12">
+							<label>ชื่อสถานที่ :</label>
+						</div>
+						<div class="col-sm-7 col-xl-12">
+							<input required="" ng-model="addLocation.nameLocation" type="text" class="form-control" placeholder="enter name location">
+						</div>
+					</div>
+					<br>
+					<div class="row">
+						<div class="col-sm-2 col-xl-12">
+							<label>ที่อยู่ :</label>
+						</div>
+						<div class="col-sm-7 col-xl-12">
+							<input required="" ng-change="getLatLang()" ng-model="addLocation.addressLocation" type="text" class="form-control" placeholder="enter address">
+						</div>
+					</div>
+					<br>
+					<ng-map zoom="15" ng-if="addLocation.addressLocation" id="mapSearch" center="{{addLocation.addressLocation}}" style="height:500px">
+					</ng-map>
+					<div class="loadMap" ng-if="!addLocation.addressLocation" style="height:500px">
+						<center><p>ลองใส่ที่อยู่ดูสิ</p></center>
+					</div>
+					<br>
+					<div class="modal-footer">
+						<button type="submit" class="btn">บันทึกสถานที่นี้</button>
+					</div>
+				</form>
+			</div>
+		</div>
+	</div>
+</div>
+<!-- Popup add Change way AB -->
+<div class="modal fade bs-changWayAB-modal-lg" role="dialog" tabindex="-1" aria-labelledby="myLargeModalLabel" style="display: none;"> 
+	<div class="modal-dialog modal-lg" role="document"> 
+		<div class="modal-content"> 
+			<div class="modal-header"> 
+				<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+					<span aria-hidden="true">X</span>
+				</button> 
+				<h4 class="modal-title" id="myLargeModalLabel">เปลี่ยนเส้นทาง "{{locationA.nameLocation}}" ไป "{{locationB.nameLocation}}"</h4> 
+			</div> 
+			<div class="modal-body">
+				<ng-map ng-mousemove="changeWayAB()" ng-if="centerLocationAB" id="mapAB" center="{{centerLocationAB}}" style="height:500px">
+					<directions draggable="true" panel="directions-panel" travel-mode="DRIVING" origin="{{locationA.locationLat}},{{locationA.locationLng}}" destination="{{locationB.locationLat}},{{locationB.locationLng}}">
+					</directions>
+				</ng-map>
+				<div class="loadMap" ng-if="!centerLocationAB" style="height:500px">
+					<center><p>{{textLoad}}</p></center>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+<!-- Popup add Change way BC -->
+<div class="modal fade bs-changWayBC-modal-lg" role="dialog" tabindex="-1" aria-labelledby="myLargeModalLabel" style="display: none;"> 
+	<div class="modal-dialog modal-lg" role="document"> 
+		<div class="modal-content"> 
+			<div class="modal-header"> 
+				<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+					<span aria-hidden="true">X</span>
+				</button> 
+				<h4 class="modal-title" id="myLargeModalLabel">เปลี่ยนเส้นทาง "{{locationB.nameLocation}}" ไป "{{locationC.nameLocation}}"</h4> 
+			</div> 
+			<div class="modal-body">
+				<ng-map ng-mousemove="changeWayBC()" ng-if="centerLocationBC" id="mapBC" center="{{centerLocationBC}}" style="height:500px">
+					<directions draggable="true" panel="directions-panel" travel-mode="DRIVING" origin="{{locationB.locationLat}},{{locationB.locationLng}}" destination="{{locationC.locationLat}},{{locationC.locationLng}}">
+					</directions>
+				</ng-map>
+				<div class="loadMap" ng-if="!centerLocationBC" style="height:500px">
+					<center><p>{{textLoad}}</p></center>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+<!-- Popup add Change way CD -->
+<div class="modal fade bs-changWayCD-modal-lg" role="dialog" tabindex="-1" aria-labelledby="myLargeModalLabel" style="display: none;"> 
+	<div class="modal-dialog modal-lg" role="document"> 
+		<div class="modal-content"> 
+			<div class="modal-header"> 
+				<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+					<span aria-hidden="true">X</span>
+				</button> 
+				<h4 class="modal-title" id="myLargeModalLabel">เปลี่ยนเส้นทาง "{{locationC.nameLocation}}" ไป "{{locationD.nameLocation}}"</h4> 
+			</div> 
+			<div class="modal-body">
+				<ng-map ng-mousemove="changeWayCD()" ng-if="centerLocationCD" id="mapCD" center="{{centerLocationCD}}" style="height:500px">
+					<directions draggable="true" panel="directions-panel" travel-mode="DRIVING" origin="{{locationC.locationLat}},{{locationC.locationLng}}" destination="{{locationD.locationLat}},{{locationD.locationLng}}">
+					</directions>
+				</ng-map>
+				<div class="loadMap" ng-if="!centerLocationCD" style="height:500px">
+					<center><p>{{textLoad}}</p></center>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+<!-- Popup add Change way BA -->
+<div class="modal fade bs-changWayBA-modal-lg" role="dialog" tabindex="-1" aria-labelledby="myLargeModalLabel" style="display: none;"> 
+	<div class="modal-dialog modal-lg" role="document"> 
+		<div class="modal-content"> 
+			<div class="modal-header"> 
+				<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+					<span aria-hidden="true">X</span>
+				</button> 
+				<h4 class="modal-title" id="myLargeModalLabel">เปลี่ยนเส้นทาง "{{locationLast.nameLocation}}" ไป "{{locationA.nameLocation}}"</h4> 
+			</div>
+			<div class="modal-body">
+				<ng-map ng-mousemove="changeWayBA()" ng-if="centerLocationBA" id="mapBA" center="{{centerLocationBA}}" style="height:500px">
+					<directions draggable="true" panel="directions-panel" travel-mode="DRIVING" origin="{{locationLast.locationLat}},{{locationLast.locationLng}}" destination="{{locationA.locationLat}},{{locationA.locationLng}}">
+					</directions>
+				</ng-map>
+				<div class="loadMap" ng-if="!centerLocationBA" style="height:500px">
+					<center><p>{{textLoad}}</p></center>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+<!------------------------------------------------------------  hide  ---------------------------------------------------------------------->
+<div ng-hide="true">
+	<ng-map ng-mousemove="changeWayABB()" ng-if="centerLocationABB" id="mapABB" center="{{centerLocationABB}}" style="height:500px">
+		<directions draggable="true" panel="directions-panel" travel-mode="DRIVING" origin="{{locationA.locationLat}},{{locationA.locationLng}}" destination="{{locationB.locationLat}},{{locationB.locationLng}}">
+		</directions>
+	</ng-map>
+	<ng-map ng-mousemove="changeWayBCC()" ng-if="centerLocationBCC" id="mapBCC" center="{{centerLocationBCC}}" style="height:500px">
+		<directions draggable="true" panel="directions-panel" travel-mode="DRIVING" origin="{{locationB.locationLat}},{{locationB.locationLng}}" destination="{{locationC.locationLat}},{{locationC.locationLng}}">
+		</directions>
+	</ng-map>
+	<ng-map ng-mousemove="changeWayCDD()" ng-if="centerLocationCDD" id="mapCDD" center="{{centerLocationCDD}}" style="height:500px">
+		<directions draggable="true" panel="directions-panel" travel-mode="DRIVING" origin="{{locationC.locationLat}},{{locationC.locationLng}}" destination="{{locationD.locationLat}},{{locationD.locationLng}}">
+		</directions>
+	</ng-map>
+	<ng-map ng-mousemove="changeWayBAA()" ng-if="centerLocationBAA" id="mapBAA" center="{{centerLocationBAA}}" style="height:500px">
+		<directions draggable="true" panel="directions-panel" travel-mode="DRIVING" origin="{{locationLast.locationLat}},{{locationLast.locationLng}}" destination="{{locationA.locationLat}},{{locationA.locationLng}}">
+		</directions>
+	</ng-map>
+</div>
+
+
